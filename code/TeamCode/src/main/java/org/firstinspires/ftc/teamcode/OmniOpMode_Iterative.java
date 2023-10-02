@@ -18,6 +18,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Omni Iterative OpMode", group = "Iterative OpMode")
 public class OmniOpMode_Iterative extends OpMode {
+    private final boolean RECORD = false; // DO NOT RECORD AT COMPETITION YOU WILL BE DISQUALIFIED!
+
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
