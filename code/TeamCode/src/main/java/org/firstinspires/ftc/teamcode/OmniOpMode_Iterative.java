@@ -70,8 +70,8 @@ public class OmniOpMode_Iterative extends OpMode {
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-        double lateral = gamepad1.left_stick_x;
+        double axial = -gamepad1.left_stick_y;
+        double lateral = -gamepad1.left_stick_x;
         double yaw = gamepad1.right_stick_x;
         leftFrontPower = axial + lateral + yaw;
         rightFrontPower = axial - lateral - yaw;
