@@ -24,7 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Disabled
-@TeleOp(name = "Basic: Omni Iterative OpMode", group = "Iterative OpMode")
+@TeleOp(name = "Omni Iterative Headless OpMode", group = "Iterative OpMode")
 public class ExperimentalOmniHeadless_Iterative extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;

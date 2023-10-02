@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * example OpModes in the FtcRobotController > java > org.firstinspires.ftc.robotcontroller
  */
 
-@TeleOp(name = "Basic: Omni Headless Iterative OpMode", group = "Iterative OpMode")
+@TeleOp(name = "Omni Iterative OpMode", group = "Iterative OpMode")
 public class OmniOpMode_Iterative extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
