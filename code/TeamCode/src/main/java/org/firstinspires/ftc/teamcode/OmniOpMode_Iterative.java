@@ -26,6 +26,11 @@ public class OmniOpMode_Iterative extends OpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
+    public float prevLeftStickX = 0.00f;
+    public float prevLeftStickY = 0.00f;
+    public float prevRightStickX = 0.00f;
+
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
