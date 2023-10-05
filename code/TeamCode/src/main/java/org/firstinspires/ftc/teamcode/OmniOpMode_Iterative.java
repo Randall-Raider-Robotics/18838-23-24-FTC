@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * If you are a new programmer but understand java, take a look at the
  * example OpModes in the FtcRobotController > java > org.firstinspires.ftc.robotcontroller
  */
-
+@SuppressWarnings("unused")
 @TeleOp(name = "Omni Iterative OpMode", group = "Iterative OpMode")
 public class OmniOpMode_Iterative extends OpMode {
     private final boolean RECORD = false; // DO NOT RECORD AT COMPETITION YOU WILL BE DISQUALIFIED!
@@ -26,9 +26,15 @@ public class OmniOpMode_Iterative extends OpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    public float prevLeftStickX = 0.00f;
-    public float prevLeftStickY = 0.00f;
-    public float prevRightStickX = 0.00f;
+    public double prevLeftStickX = 0.00;
+    public double prevLeftStickY = 0.00;
+    public double prevRightStickX = 0.00;
+
+    public double leftStickX = 0.00;
+    public double leftStickY = 0.00;
+    public double rightStickX = 0.00;
+
+    public int count = 0;
 
 
     @Override
@@ -62,6 +68,7 @@ public class OmniOpMode_Iterative extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        count = 0;
     }
 
     /*
@@ -69,6 +76,8 @@ public class OmniOpMode_Iterative extends OpMode {
      */
     @Override
     public void loop() {
+        count += 1;
+
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
         double rightFrontPower;
@@ -77,13 +86,38 @@ public class OmniOpMode_Iterative extends OpMode {
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double axial = gamepad1.left_stick_y;
-        double lateral = -gamepad1.left_stick_x;
-        double yaw = -gamepad1.right_stick_x;
+
+        leftStickX = -gamepad1.left_stick_x;
+        leftStickY = gamepad1.left_stick_y;
+        rightStickX = -gamepad1.right_stick_x;
+
+        double axial = leftStickY;
+        double lateral = leftStickX;
+        double yaw = rightStickX;
+
+
+        // Cut power in half if stick change is greater than 0.2,
+        // reduces drifting. (Doesn't work yet. Probably divide power instead of yaw/axial/lateral  
+        /*
+        if (Math.abs(leftStickX - prevLeftStickX) > 0.3 || Math.abs(leftStickY - prevLeftStickY) > 0.3) {
+            lateral = (leftStickX+prevLeftStickX)/2.0;
+        }
+        if(Math.abs(rightStickX-prevRightStickX) > 0.3){
+            yaw = (rightStickX+prevRightStickX)/2.0;
+        }
+        if(Math.abs(leftStickY - prevLeftStickY) > 0.3){
+            axial = (leftStickY+prevLeftStickY)/2.0;
+        }
+         */
+
+
+
         leftFrontPower = axial + lateral + yaw;
         rightFrontPower = axial - lateral - yaw;
         leftBackPower = axial - lateral + yaw;
         rightBackPower = axial + lateral - yaw;
+
+
 
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower);
@@ -96,6 +130,11 @@ public class OmniOpMode_Iterative extends OpMode {
         telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
         telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
         telemetry.update();
+
+        prevLeftStickX = gamepad1.left_stick_x;
+        prevLeftStickY = gamepad1.left_stick_y;
+        prevRightStickX = gamepad1.right_stick_x;
+
     }
 
     /*

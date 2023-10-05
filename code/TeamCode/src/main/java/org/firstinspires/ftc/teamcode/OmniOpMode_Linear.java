@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -63,9 +64,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name = "Omni Linear OpMode", group = "Linear OpMode")
+@Disabled
 public class OmniOpMode_Linear extends LinearOpMode {
 
-    private final boolean RECORD = false; // DO NOT RECORD AT COMPETITION YOU WILL BE DISQUALIFIED!
+    // DO NOT RECORD AT COMPETITION YOU WILL BE DISQUALIFIED!
     private final ElapsedTime runtime = new ElapsedTime();
 
     @Override

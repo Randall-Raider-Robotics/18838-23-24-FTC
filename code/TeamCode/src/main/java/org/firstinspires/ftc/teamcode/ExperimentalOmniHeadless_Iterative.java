@@ -36,6 +36,7 @@ public class ExperimentalOmniHeadless_Iterative extends OpMode {
             = RevHubOrientationOnRobot.UsbFacingDirection.values();
     static int LAST_DIRECTION = logoFacingDirections.length - 1;
     static float TRIGGER_THRESHOLD = 0.2f;
+    double imuYaw_initial = 0.0;
 
     IMU imu;
     int logoFacingDirectionPosition;
@@ -81,6 +82,7 @@ public class ExperimentalOmniHeadless_Iterative extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        imuYaw_initial = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
     /*
@@ -101,7 +103,7 @@ public class ExperimentalOmniHeadless_Iterative extends OpMode {
         double yaw = -gamepad1.right_stick_x;
 
         double imuYaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        double headlessDroneYaw = yaw - imuYaw;
+        double difference;
 
         leftFrontPower = forwardBackward + lateral + yaw;
         rightFrontPower = forwardBackward - lateral - yaw;
@@ -109,10 +111,10 @@ public class ExperimentalOmniHeadless_Iterative extends OpMode {
         rightBackPower = forwardBackward + lateral - yaw;
 
         if(Math.abs(lateral)>0.1 || Math.abs(yaw)>0.1){
-            leftFrontPower = forwardBackward + lateral + headlessDroneYaw;
-            rightFrontPower = forwardBackward - lateral - headlessDroneYaw;
-            leftBackPower = forwardBackward - lateral + headlessDroneYaw;
-            rightBackPower = forwardBackward + lateral - headlessDroneYaw;
+            difference = Math.abs(imuYaw - imuYaw_initial);
+        }
+        else {
+            difference = 0;
         }
 
         // Show the elapsed game time and wheel power.
@@ -180,10 +182,10 @@ public class ExperimentalOmniHeadless_Iterative extends OpMode {
         }
 
         // Send calculated power to wheels
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        leftFrontDrive.setPower(leftFrontPower+difference);
+        rightFrontDrive.setPower(rightFrontPower+difference);
+        leftBackDrive.setPower(leftBackPower+difference);
+        rightBackDrive.setPower(rightBackPower+difference);
 
         telemetry.update();
     }
