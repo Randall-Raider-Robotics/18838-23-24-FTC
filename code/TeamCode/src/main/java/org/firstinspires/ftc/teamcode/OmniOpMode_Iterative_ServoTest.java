@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-// TODO: Test this OpMode
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * example OpModes in the FtcRobotController > java > org.firstinspires.ftc.robotcontroller
  */
 @SuppressWarnings("unused")
-@TeleOp(name = "Omni Iterative OpMode", group = "Iterative OpMode")
-public class OmniHeadlessOpMode extends OpMode {
+@TeleOp(name = "Omni Iterative OpMode with Servos", group = "Iterative OpMode")
+public class OmniOpMode_Iterative_ServoTest extends OpMode {
     private final boolean RECORD = false; // DO NOT RECORD AT COMPETITION YOU WILL BE DISQUALIFIED!
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -24,6 +24,8 @@ public class OmniHeadlessOpMode extends OpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private CRServo leftServo;
+    private CRServo rightServo;
 
     public double prevLeftStickX = 0.00;
     public double prevLeftStickY = 0.00;
@@ -35,24 +37,29 @@ public class OmniHeadlessOpMode extends OpMode {
 
     public int count = 0;
 
+
     @Override
     public void init() {
-        // Set motors to hardware map
+        telemetry.addData("Status", "Initialized");
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        leftServo = (CRServo) hardwareMap.get(CRServo.class, "left_servo");
+        rightServo = (CRServo) hardwareMap.get(CRServo.class, "right_servo");
 
-        // Set motor directions
+        // Flip it if the wheel is going an unexpected direction.
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        // Initialize IMU
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(parameters);
-        double imuYaw = 0.00;
+        // Tell the driver that initialization is complete.
+        telemetry.addData("Status", "Initialized");
     }
 
     // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -72,7 +79,7 @@ public class OmniHeadlessOpMode extends OpMode {
      */
     @Override
     public void loop() {
-        imuYaw = imu.getRotation();
+        count += 1;
 
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftFrontPower;
@@ -91,17 +98,29 @@ public class OmniHeadlessOpMode extends OpMode {
         double lateral = leftStickX;
         double yaw = rightStickX;
 
+
         // Cut power in half if stick change is greater than 0.2,
-        // reduces drifting. (Doesn't work yet. Probably divide power instead of
-        // yaw/axial/lateral
-        // if (Math.abs(leftStickX - prevLeftStickX) > 0.2) {
-        // lateral = lateral / 2;
-        // }
+        // reduces drifting. (Doesn't work yet. Probably divide power instead of yaw/axial/lateral  
+        /*
+        if (Math.abs(leftStickX - prevLeftStickX) > 0.3 || Math.abs(leftStickY - prevLeftStickY) > 0.3) {
+            lateral = (leftStickX+prevLeftStickX)/2.0;
+        }
+        if(Math.abs(rightStickX-prevRightStickX) > 0.3){
+            yaw = (rightStickX+prevRightStickX)/2.0;
+        }
+        if(Math.abs(leftStickY - prevLeftStickY) > 0.3){
+            axial = (leftStickY+prevLeftStickY)/2.0;
+        }
+         */
+
+
 
         leftFrontPower = axial + lateral + yaw;
         rightFrontPower = axial - lateral - yaw;
         leftBackPower = axial - lateral + yaw;
         rightBackPower = axial + lateral - yaw;
+
+
 
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower);
@@ -119,36 +138,9 @@ public class OmniHeadlessOpMode extends OpMode {
         prevLeftStickY = gamepad1.left_stick_y;
         prevRightStickX = gamepad1.right_stick_x;
 
-        /*
-         * Using the imu rotation, below the codes will display whether or not the robot is
-         * moving as it should, forward will always be the direction the use is playing,
-         * and the direction the robot starts in will always match that direction.
-         * 
-         * When the robot is matching the movement it needs to EX: while it's facing left it's
-         * still going right since that's the direction it that appears to be forward to the drive,
-         * it will display "Correct headless code" and when it's not it will display "Incorrect headless code"
-         * 
-         * Once this code is uneeded, it will be commented out, but kept in case needed later
-         */
-        if (imu.getRotation() >= 0 && imu.getRotation() <= 90) {
-            // When it's movement direction is forward (from the user) no matter what the user is facing say "Correct headless code"
-            
-            // Only test if it's using the headless code and not just facing forward
-            if(imuYaw != 0.00) {
-                telemetry.addData("Using headless code", " ");
-                //if velocity is forward while the left stick is pushed forward say "corred headless code"
-                if (leftStickY > 0 && leftFrontPower > 0 && rightFrontPower > 0 && leftBackPower > 0 && rightBackPower > 0) {
-                    telemetry.addData("Correct headless code", " ");
-                }
-                else {
-                    telemetry.addData("Incorrect headless code", " ");
-                }
-            }
-            else {
-                telemetry.addData("Not using headless code", " ");
-            }
-        }
-        
+        // Code for testing servos for drone launcher:
+        leftServo.setPower(-1.0);
+        rightServo.setPower(1.0);
 
     }
 
