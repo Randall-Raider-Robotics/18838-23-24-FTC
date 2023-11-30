@@ -5,9 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-// TODO: Test this OpMode
-
-
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * It has been modified to work with omni wheels.
@@ -15,10 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * If you are a new programmer but understand java, take a look at the
  * example OpModes in the FtcRobotController > java > org.firstinspires.ftc.robotcontroller
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("unused, SpellCheckingInspection")
 @TeleOp(name = "Omni Iterative OpMode", group = "Iterative OpMode")
-public class OmniOpMode_Iterative extends OpMode {
-    private final boolean RECORD = false; // DO NOT RECORD AT COMPETITION YOU WILL BE DISQUALIFIED!
+public class OmniOpMode_IterativeWORKING extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
@@ -50,8 +46,8 @@ public class OmniOpMode_Iterative extends OpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         // Flip it if the wheel is going an unexpected direction.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
@@ -95,29 +91,10 @@ public class OmniOpMode_Iterative extends OpMode {
         double lateral = leftStickX;
         double yaw = rightStickX;
 
-
-        // Cut power in half if stick change is greater than 0.2,
-        // reduces drifting. (Doesn't work yet. Probably divide power instead of yaw/axial/lateral  
-        /*
-        if (Math.abs(leftStickX - prevLeftStickX) > 0.3 || Math.abs(leftStickY - prevLeftStickY) > 0.3) {
-            lateral = (leftStickX+prevLeftStickX)/2.0;
-        }
-        if(Math.abs(rightStickX-prevRightStickX) > 0.3){
-            yaw = (rightStickX+prevRightStickX)/2.0;
-        }
-        if(Math.abs(leftStickY - prevLeftStickY) > 0.3){
-            axial = (leftStickY+prevLeftStickY)/2.0;
-        }
-         */
-
-
-
         leftFrontPower = axial + lateral + yaw;
         rightFrontPower = axial - lateral - yaw;
         leftBackPower = axial - lateral + yaw;
         rightBackPower = axial + lateral - yaw;
-
-
 
         // Send calculated power to wheels
         leftFrontDrive.setPower(leftFrontPower);
@@ -130,16 +107,8 @@ public class OmniOpMode_Iterative extends OpMode {
         telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
         telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
         telemetry.update();
-
-        prevLeftStickX = gamepad1.left_stick_x;
-        prevLeftStickY = gamepad1.left_stick_y;
-        prevRightStickX = gamepad1.right_stick_x;
-
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
     }
