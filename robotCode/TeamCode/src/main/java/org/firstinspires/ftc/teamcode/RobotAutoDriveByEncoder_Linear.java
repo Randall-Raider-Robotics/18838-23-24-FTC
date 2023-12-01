@@ -23,6 +23,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
 
     /*
+     * https://www.gobilda.com/content/spec_sheets/5203-2402-0019_spec_sheet.pdf
      * 5203 Series Yellow Jacket Planetary Gear Motor
      * 19.2:1 Ratio
      * 24mm Length 8mm REX™ Shaft
