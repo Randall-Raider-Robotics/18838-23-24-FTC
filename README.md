@@ -7,7 +7,7 @@ Welcome to the Randall Robotics Team's official repository for the First Tech Ch
 - **Team Name:** Randall Robotics Team
 - **Competition Season:** FTC 2023-2024
 - **Location:** [Randall High School](http://rhs.canyonisd.net)
-- **Team Members:** Kaden Frisk, Miguel Quinonez, Kimberly Fox, Conner Tomas, Aidan Pool, Aidan Fox, and Alexandria Satterwhite
+- **Team Members:** Kaden Frisk, Miguel Quinonez, Kimberly Fox, Conner Tomas, Aidan Poole, Aidan Fox, and Alexandria Satterwhite
 
 ## Mission Statement
 
