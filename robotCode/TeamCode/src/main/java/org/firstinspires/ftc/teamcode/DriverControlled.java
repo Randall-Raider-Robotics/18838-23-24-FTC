@@ -14,24 +14,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @SuppressWarnings("unused, SpellCheckingInspection")
 @TeleOp(name = "Omni Iterative OpMode", group = "Iterative OpMode")
-public class OmniOpMode_IterativeWORKING extends OpMode {
+public class DriverControlled extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
+    public double prevLeftStickX = 0.00;
+    public double prevLeftStickY = 0.00;
+    public double prevRightStickX = 0.00;
+    public double leftStickX = 0.00;
+    public double leftStickY = 0.00;
+    public double rightStickX = 0.00;
+    public int count = 0;
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-
-    public double prevLeftStickX = 0.00;
-    public double prevLeftStickY = 0.00;
-    public double prevRightStickX = 0.00;
-
-    public double leftStickX = 0.00;
-    public double leftStickY = 0.00;
-    public double rightStickX = 0.00;
-
-    public int count = 0;
-
 
     @Override
     public void init() {
@@ -107,10 +103,6 @@ public class OmniOpMode_IterativeWORKING extends OpMode {
         telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
         telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
         telemetry.update();
-    }
-
-    @Override
-    public void stop() {
     }
 
 }
